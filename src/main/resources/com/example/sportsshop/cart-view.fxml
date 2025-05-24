@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sportsshop.CartController">
+    <top>
+        <Label text="Ваш кошик" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+            <BorderPane.margin>
+                <Insets bottom="10.0" top="10.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
+    <center>
+        <TableView fx:id="cartTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="productNameColumn" prefWidth="200.0" text="Назва товару" />
+                <TableColumn fx:id="productPriceColumn" prefWidth="100.0" text="Ціна за од." />
+                <TableColumn fx:id="quantityColumn" prefWidth="75.0" text="К-сть" />
+                <TableColumn fx:id="totalItemPriceColumn" prefWidth="120.0" text="Всього" />
+            </columns>
+            <BorderPane.margin>
+                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+            </BorderPane.margin>
+        </TableView>
+    </center>
+    <bottom>
+        <VBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+            <children>
+                <Label fx:id="totalCartPriceLabel" text="Загальна сума: 0.00 грн">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                    <children>
+                        <Button fx:id="removeItemButton" mnemonicParsing="false" onAction="#handleRemoveItem" text="Видалити обране" disable="true" />
+                        <Button fx:id="clearCartButton" mnemonicParsing="false" onAction="#handleClearCart" text="Очистити кошик" />
+                        <Button fx:id="closeCartButton" mnemonicParsing="false" onAction="#handleCloseCart" text="Закрити" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </bottom>
+</BorderPane>
