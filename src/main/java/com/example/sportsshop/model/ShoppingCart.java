@@ -37,4 +37,10 @@ public class ShoppingCart {
     public double getTotalPrice() {
         return items.stream().mapToDouble(CartItem::getTotalPrice).sum();
     }
+
+    public int getTotalItemCount() { // Убедитесь, что имя и тип возвращаемого значения верны
+        return items.stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
+    }
 }
