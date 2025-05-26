@@ -1,7 +1,8 @@
 package com.example.sportsshop;
 
-import com.example.sportsshop.model.Product;
-import com.example.sportsshop.model.ShoppingCart;
+// Імпорти для нових класів товарів
+import com.example.sportsshop.inventory.*;
+import com.example.sportsshop.model.ShoppingCart; // Залишається
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,13 +20,13 @@ import java.io.IOException;
 public class MainController {
 
     @FXML
-    private ListView<Product> productListView;
+    private ListView<AbstractSportingGood> productListView; // Змінено тип
     @FXML
     private Label productNameLabel;
     @FXML
     private Label productPriceLabel;
     @FXML
-    private Label productDescriptionLabel;
+    private Label productDescriptionLabel; // Будемо використовувати для getSpecificDetails()
     @FXML
     private Button addToCartButton;
     @FXML
@@ -33,27 +34,37 @@ public class MainController {
     @FXML
     private Button viewCartButton;
 
-    private ObservableList<Product> availableProducts;
-    private ShoppingCart shoppingCart; // Спільний кошик
+    private ObservableList<AbstractSportingGood> availableProducts; // Змінено тип
+    private ShoppingCart shoppingCart;
 
-    public MainController() {
-        // Конструктор викликається перед initialize()
-    }
-
-    // Метод для ін'єкції ShoppingCart з MainApp
     public void setShoppingCart(ShoppingCart cart) {
         this.shoppingCart = cart;
-        updateCartStatusLabel(); // Оновити статус при встановленні
+        updateCartStatusLabel();
     }
 
     @FXML
     public void initialize() {
         availableProducts = FXCollections.observableArrayList(
-                new Product("Футбольний м'яч", 350.00, "Професійний футбольний м'яч, розмір 5."),
-                new Product("Баскетбольний м'яч", 420.50, "Для гри в залі та на вулиці, Spalding."),
-                new Product("Тенісна ракетка", 1200.00, "Легка ракетка для початківців, Wilson."),
-                new Product("Кросівки для бігу", 2500.75, "Амортизуючі кросівки, Asics Gel."),
-                new Product("Коврик для йоги", 500.00, "Нековзкий коврик, товщина 6мм.")
+                new Ball("Футбольний м'яч Pro", 450.00, "Nike", "Професійний м'яч для матчів",
+                        "football", 5, "Поліуретан", "professional match"),
+                new Ball("Баскетбольний м'яч Street", 380.00, "Spalding", "Для гри на вулиці",
+                        "basketball", 7, "Гума", "outdoor"),
+                new Racket("Тенісна ракетка Aero", 2200.00, "Babolat", "Для атакуючих гравців",
+                        "tennis", 100, 300, "16x19"),
+                new Racket("Бадмінтонна ракетка Feather", 850.00, "Yonex", "Легка та маневрена",
+                        "badminton", 285, 85, "22x23"),
+                new Sportswear("Бігова футболка Cool", 700.00, "Adidas", "З технологією ClimaCool",
+                        "T-Shirt", "M", "Синій", "Polyester", true),
+                new Sportswear("Тренувальні штани Flex", 1200.00, "Under Armour", "Еластичні для свободи рухів",
+                        "Leggings", "L", "Чорний", "Polyester/Spandex", true),
+                new Footwear("Кросівки для бігу Pegasus", 3500.00, "Nike", "Амортизація та комфорт",
+                        "Running", 42.5, "React Foam", true, "Traditional"),
+                new Footwear("Баскетбольні кросівки LeBron", 4800.00, "Nike", "Підтримка та зчеплення",
+                        "Basketball", 44.0, "Rubber/Zoom Air", true, "Traditional"),
+                new Accessory("Фітнес-трекер Charge 5", 4200.00, "FitBit", "Відстеження активності та сну",
+                        "Фітнес-трекер", "Пластик/Силікон", true, "Загальні тренування"),
+                new Accessory("Пляшка для води Steel", 500.00, "HydroFlask", "Зберігає температуру",
+                        "Пляшка для води", "Нержавіюча сталь", false, "Загальні тренування")
         );
         productListView.setItems(availableProducts);
 
@@ -61,19 +72,15 @@ public class MainController {
                 (observable, oldValue, newValue) -> showProductDetails(newValue)
         );
 
-        // Ініціалізація полів, якщо shoppingCart ще не встановлено
-        if (shoppingCart == null) {
-            // shoppingCart буде встановлено через setShoppingCart
-            // Тому тут можна залишити порожнім або встановити початковий статус
-            updateCartStatusLabel();
-        }
+        updateCartStatusLabel();
     }
 
-    private void showProductDetails(Product product) {
+    private void showProductDetails(AbstractSportingGood product) { // Змінено тип параметра
         if (product != null) {
-            productNameLabel.setText("Назва: " + product.getName());
+            productNameLabel.setText("Назва: " + product.getName() + " (" + product.getBrand() + ")");
             productPriceLabel.setText(String.format("Ціна: %.2f грн", product.getPrice()));
-            productDescriptionLabel.setText("Опис: " + product.getDescription());
+            // Використовуємо getSpecificDetails() для детального опису
+            productDescriptionLabel.setText("Деталі: " + product.getSpecificDetails() + "\nЗагальний опис: " + product.getDescription());
             addToCartButton.setDisable(false);
         } else {
             productNameLabel.setText("Назва: ");
@@ -85,9 +92,9 @@ public class MainController {
 
     @FXML
     private void handleAddToCart() {
-        Product selectedProduct = productListView.getSelectionModel().getSelectedItem();
+        AbstractSportingGood selectedProduct = productListView.getSelectionModel().getSelectedItem(); // Змінено тип
         if (selectedProduct != null && shoppingCart != null) {
-            shoppingCart.addProduct(selectedProduct, 1); // Додаємо 1 одиницю
+            shoppingCart.addProduct(selectedProduct, 1);
             System.out.println(selectedProduct.getName() + " додано в кошик.");
             updateCartStatusLabel();
         }
@@ -104,17 +111,14 @@ public class MainController {
             Parent root = loader.load();
 
             CartController cartController = loader.getController();
-            cartController.setShoppingCart(shoppingCart); // Передаємо той самий екземпляр кошика
+            cartController.setShoppingCart(shoppingCart);
 
             Stage cartStage = new Stage();
             cartStage.setTitle("Ваш кошик");
-            cartStage.initModality(Modality.APPLICATION_MODAL); // Блокує головне вікно
+            cartStage.initModality(Modality.APPLICATION_MODAL);
             cartStage.setScene(new Scene(root));
-
-            // Додамо слухача для оновлення статусу кошика при закритті вікна кошика
             cartStage.setOnHidden(event -> updateCartStatusLabel());
-
-            cartStage.showAndWait(); // Показує вікно і чекає його закриття
+            cartStage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -124,8 +128,9 @@ public class MainController {
 
     private void updateCartStatusLabel() {
         if (shoppingCart != null && !shoppingCart.getItems().isEmpty()) {
-            cartStatusLabel.setText(String.format("У кошику: %d товар(ів) на суму %.2f грн",
-                    shoppingCart.getItems().size(), shoppingCart.getTotalPrice()));
+            int totalItems = shoppingCart.getItems().stream().mapToInt(item -> item.getQuantity()).sum(); // Рахуємо загальну кількість одиниць
+            cartStatusLabel.setText(String.format("У кошику: %d од. товару на суму %.2f грн",
+                    totalItems, shoppingCart.getTotalPrice()));
         } else {
             cartStatusLabel.setText("Кошик порожній");
         }

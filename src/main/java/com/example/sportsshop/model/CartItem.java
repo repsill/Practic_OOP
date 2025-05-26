@@ -1,18 +1,19 @@
 package com.example.sportsshop.model;
 
+import com.example.sportsshop.inventory.AbstractSportingGood; // Змінено імпорт
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class CartItem {
-    private final Product product;
+    private final AbstractSportingGood product; // Змінено тип з Product на AbstractSportingGood
     private final IntegerProperty quantity;
 
-    public CartItem(Product product, int quantity) {
+    public CartItem(AbstractSportingGood product, int quantity) { // Змінено тип параметра
         this.product = product;
         this.quantity = new SimpleIntegerProperty(quantity);
     }
 
-    public Product getProduct() {
+    public AbstractSportingGood getProduct() { // Змінено тип, що повертається
         return product;
     }
 
@@ -32,7 +33,7 @@ public class CartItem {
         return product.getPrice() * quantity.get();
     }
 
-    // Додамо для відображення в TableView
+    // Для TableView (залишаються такими ж, бо AbstractSportingGood має ці методи)
     public String getProductName() {
         return product.getName();
     }

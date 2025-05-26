@@ -1,5 +1,6 @@
 package com.example.sportsshop.model;
 
+import com.example.sportsshop.inventory.AbstractSportingGood; // Змінено імпорт
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -14,9 +15,10 @@ public class ShoppingCart {
         return items;
     }
 
-    public void addProduct(Product product, int quantity) {
+    public void addProduct(AbstractSportingGood product, int quantity) { // Змінено тип параметра
         for (CartItem item : items) {
-            if (item.getProduct().getName().equals(product.getName())) {
+            // Порівнюємо по ID для унікальності товару, а не тільки по імені
+            if (item.getProduct().getId().equals(product.getId())) {
                 item.setQuantity(item.getQuantity() + quantity);
                 return;
             }

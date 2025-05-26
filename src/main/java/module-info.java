@@ -5,4 +5,6 @@ module com.example.sportsshop {
 
     opens com.example.sportsshop to javafx.fxml;
     exports com.example.sportsshop;
+    exports com.example.sportsshop.model;
+    opens com.example.sportsshop.model to javafx.fxml;
 }
